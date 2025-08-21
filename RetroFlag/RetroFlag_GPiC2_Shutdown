@@ -1,0 +1,26 @@
+#!/bin/bash
+
+case "$1" in
+start)
+   python3 /userdata/RetroFlag/RetroFlag_GPiC2_Shutdown.py &
+   echo $!>/var/run/RetroFlag_GPiC2_Shutdown.pid
+   ;;
+stop)
+   kill `cat /var/run/RetroFlag_GPiC2_Shutdown.pid`
+   rm /var/run/RetroFlag_GPiC2_Shutdown.pid
+   ;;
+restart)
+   $0 stop
+   $0 start
+   ;;
+status)
+   if [ -e /var/run/RetroFlag_GPiC2_Shutdown.pid ]; then
+      echo RetroFlag_GPiC2_Shutdown is running, pid=`cat /var/run/RetroFlag_GPiC2_Shutdown.pid`
+   else
+      echo RetroFlag_GPiC2_Shutdown is NOT running
+      exit 1
+   fi
+   ;;
+esac
+
+exit 0
