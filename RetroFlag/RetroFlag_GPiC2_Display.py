@@ -39,7 +39,7 @@ def switch_config(config_file):
         logging.info("Restarting system")
         os.system("batocera-es-swissknife --emukill")
         time.sleep(1)
-        os.system("restart")
+        os.system("shutdown -r now")
         exit(0)
         
     except Exception as e:
