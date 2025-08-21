@@ -1,37 +1,71 @@
-<h2>Notes</h2>
-<p>These instructions are for batocera 41 with the Raspberry Pi CM4.</p>
-<p>You may need to flash your CM4 with the appropriate firmware before you start this process. My CM4 would not boot with the eMMC storage no matter what I did until I installed a different firmware. You can do this by using the Raspberry Pi Imager and installing the "Misc utilities images > Bootloader (Pi 4 family) > SD Card Boot" image.</p>
-<p>The GPi Case 2 does not automatically switch between LCD and HDMI when plugged / unplugged from the dock. The scripts and services installed by this procedure automatically replace the content of config.txt and reboot the Raspberry Pi to boot in the correct display mode. If there is a way to switch between HDMI and LCD automatically without rebooting, I'm not smart enough to find it.</p>
-<p>When the GPi Case 2 booted in LCD mode while it's configuration is still in HDMI mode (or vice-versa), it will detect that the current configuration is wrong, switch to the correct configuration and reboot. To avoid this, just plug or unplug into the dock while the unit is online so it will only reboot once.</p>
-
-<h2>Special instructions for people using eMMC storage</h2>
-<p>(not needed if you're using an SD card or other external storage)</p>
+<h2>Installation procedure for Raspberry Pi firmware</h2>
+<p>If your CM4 doesn't boot out of the box with any image on your SD Card or eMMC storage (like mine did), it may need to be flashed with the SD Card firmware.</p>
 <ol>
-   <li>Install the Compute Module Boot Installer ( https://github.com/raspberrypi/usbboot/tree/master/win32 )</li>
-   <li>Plug your <strong>GPi Case 2</strong> into your computer by using the USB port in the back of the unit and boot</li>
-   <li>Flip the power switch on to boot the Raspberry Pi</li>
-   <li>Run <strong>C:\Program Files (x86)\Raspberry Pi\rpi-mass-storage-gadget64.bat</strong> on your computer to mount the eMMC storage in Windows as a USB Flash Drive</li>
+   <li>Download and install the <strong>Raspberry Pi imager</strong><br />( https://www.raspberrypi.com/software/ )</li>
+   <li>Plug the SD card into a card reader or USB adapter to mount it into Windows as a USB Drive</li>
+   <li>
+      Open <strong>Raspberry Pi imager</strong> and install the bootloader using the following settings :
+      <ul>
+         <li>Raspberry Pi Device => RASPBERRY PI 4</li>
+         <li>Operating System => Misc Utility Images => Bootloader (Pi 4 family) => SD Card Boot</li>
+         <li>Storage => USB Drive added in the previous step</li>
+      </ul>
+   </li>
+   <li>Plug the SD card into the case</li>
+   <li>Switch the case's power switch on to flash the CM4</li>
+   <li>Wait until the flashing process is done and switch the case's power switch to off</li>
+   <li>Remove the SD card</li>
+   <li>You are now ready to install a new image on the SD card</li>
+</ol>
+<p>The process for eMMC is mostly the same, but you'll need to use the mass storage gadget to connect the eMMC as a USB Drive. Look at the <strong>Installation procedure for batocera 41 on Raspberry Pi CM4 eMMC</strong> section down below to see how.</p>
+
+<h2>Installation procedure for batocera 41 on Raspberry Pi CM4 lite</h2>
+<ol>
+   <li>Download and install the <strong>Raspberry Pi imager</strong><br />( https://www.raspberrypi.com/software/ )</li>
+   <li>Download the batocera 41 <strong>Raspberry Pi 4 B</strong> image</li>
+   <li>Plug the SD card into a card reader or USB adapter to mount it into Windows as a USB Drive<br />(I will be using <strong>X</strong> as a placeholder for the SD card's drive letter through the rest of this procedure)</li>
+   <li>Install the image on the SD card</li>
+   <li>Unplug the SD card and replug it to remount the drive</li>
+   <li>Copy the <strong>RetroFlag</strong> folder to <strong>X:\</strong></li>
+   <li>Replace <strong>X:\config.txt</strong> with <strong>X:\RetroFlag\config.txt</strong></li>
+   <li>Eject the USB Drive and place the SD card in the case</li>
+   <li>Place the case in the dock with a working HDMI monitor and keyboard attached</li>
+   <li>Switch the case's power switch on to boot into batocera</li>
+   <li>When batocera is fully loaded, press <strong>Ctrl+Alt+F3</strong> to open a terminal window, or configure your WiFi in batocera and open a terminal window from another computer using SSH</li>
+   <li>Execute <strong>sh /boot/RetroFlag/install.sh</strong> to install the configuration files, scripts and services</li>
+   <li>System should reboot automatically at this point</li>
+   <li>While connected to the docking with an HDMI display, go into <strong>SYSTEM SETTINGS</strong> and change the audio output to "BUILT-IN AUDIO DIGITAL STEREO (HDMI)"</li>
+   <li>Congrats, your RetroFlag GPi Case 2 is now ready!</li>
 </ol>
 
-<h2>Instructions for installing batocera and modifying it for the GPi Case 2<br /></h2>
-<p>(note that when I write "SD card" I mean "SD card or eMMC storage")</p>
+<h2>Installation procedure for batocera 41 on Raspberry Pi CM4 with eMMC storage</h2>
 <ol>
-   <li>Install the batocera 41 Raspberry Pi 4B image on the SD card</li>
-   <li>Unplug the SD card and replug it to get access to the files<br />(If you are using eMMC storage, you can force a reboot here by using <strong>Putty</strong> to open a terminal session and connecting to the COM port that was added by the mass storage gadget. Rerun <strong>rpi-mass-storage-gadget64.bat</strong> after the reboot to reconnect the USB drive)</li>
-   <li>Copy the RetroFlag folder to the root of the SD card</li>
-   <li>Replace the content of <strong>&lt;Drive Letter&gt;:\config.txt</strong> at the root of the SD card with the content of <strong>config_hdmi.txt</strong> (or <strong>config_lcd.txt</strong> if booting without the dock / hdmi)</li>
-   <li>Eject the SD card and place it in the GPi Case 2<br />(if you are using eMMC, eject the USB drive and shutdown the Raspberry Pi using Putty to avoid corrupting the files)</li>
-   <li>Open a terminal console (<strong>Ctrl+Alt+F3</strong>) from inside batocera, or configure your WiFi in batocera and open an SSH terminal window from another computer</li>
-   <li>Install the configuration files, scripts and services by executing the following command <strong>sh /boot/RetroFlag/install.sh</strong></li>
-   <li>If you are connected to the dock with an HDMI screen, go into <strong>SYSTEM SETTINGS</strong> and change the audio output to "BUILT-IN AUDIO DIGITAL STEREO (HDMI)"</li>
-   <li>Congrats, your RetroFlag GPi Case 2 should now be able to safely shutdown and reboot in the appropriate mode depending on if you are connected to HDMI or using LCD</li>
+   <li>Download and install the <strong>Compute Module Boot</strong><br />( https://github.com/raspberrypi/usbboot/tree/master/win32 )</li>
+   <li>Download and install the <strong>Raspberry Pi imager</strong><br />( https://www.raspberrypi.com/software/ )</li>
+   <li>Download the batocera 41 <strong>Raspberry Pi 4 B</strong> image</li>
+   <li>Connect the RetroFlag GPi Case 2 to your computer using the USB micro B connector in the back of the case ( behind the fake cartridge )</li>
+   <li>Place the case in the dock with a working HDMI monitor and keyboard attached</li>
+   <li>Switch the case power switch on to boot the Raspberry Pi</li>
+   <li>Run <strong>C:\Program Files (x86)\Raspberry Pi\rpi-mass-storage-gadget64.bat</strong> on your computer to mount the eMMC storage in Windows as a USB Drive<br />(I will be using <strong>X</strong> as a placeholder for the eMMC's drive letter through the rest of this procedure)</li>
+   <li>Install the image on the on the USB Drive added in the previous step</li>
+   <li>Switch the case power switch off and then back on to reboot the Raspberry Pi</li>
+   <li>Rerun <strong>C:\Program Files (x86)\Raspberry Pi\rpi-mass-storage-gadget64.bat</strong> on your computer to remount the eMMC storage</li>
+   <li>Copy the <strong>RetroFlag</strong> folder to <strong>X:\</strong></li>
+   <li>Replace <strong>X:\config.txt</strong> with <strong>X:\RetroFlag\config.txt</strong></li>
+   <li>Eject the USB Drive and switch the case's power switch to off</li>
+   <li>Switch the case's power switch on to boot into batocera</li>
+   <li>When batocera is fully loaded, press <strong>Ctrl+Alt+F3</strong> to open a terminal window, or configure your WiFi in batocera and open a terminal window from another computer using SSH</li>
+   <li>Execute <strong>sh /boot/RetroFlag/install.sh</strong> to install the configuration files, scripts and services</li>
+   <li>System should reboot automatically at this point</li>
+   <li>While connected to the docking with an HDMI display, go into <strong>SYSTEM SETTINGS</strong> and change the audio output to "BUILT-IN AUDIO DIGITAL STEREO (HDMI)"</li>
+   <li>Congrats, your RetroFlag GPi Case 2 is now ready!</li>
 </ol>
 
 <h2>Technical Details</h2>
 <p>install.sh should copy the relevant files to these locations</p>
 <pre>
-/config_hdmi.txt
-/config_hdmi.txt
+/boot/config_hdmi.txt
+/boot/config_hdmi.txt
 /userdata/RetroFlag/RetroFlag_GPiC2_Display.py 
 /userdata/RetroFlag/RetroFlag_GPiC2_Shutdown.py
 /userdata/system/services/RetroFlag_GPiC2_Display
@@ -61,6 +95,12 @@
 
 <h3>RetroFlag_GPiC2_Shutdown</h3>
 <p>This is the bash script that acts as a service for performing a safe shutdown when the power switch is turned off or the sleep button is pressed</p>
+
+<h2>Notes</h2>
+<p>These instructions assume you are doing these procedures from a Windows 11 computer. If you want to do this from a Linux computer, you'll need to make some adjustments.</p>
+<p>The GPi Case 2 does not automatically switch between LCD and HDMI when plugged / unplugged from the dock. The scripts and services installed by this procedure automatically replace the content of config.txt and reboot the Raspberry Pi to boot in the correct display mode. If there is a way to switch between HDMI and LCD automatically without rebooting, I'm not smart enough to find it.</p>
+<p>When the GPi Case 2 is booted in LCD mode while it's configuration is still in HDMI mode (or vice-versa), it will detect that the current configuration is wrong, switch to the correct configuration and reboot. To avoid this additional delay, just plug or unplug with the dock while the unit is online so it will only reboot once.</p>
+
 <p>&nbsp;</p>
 <p>Credit to henryjfry and MrDuckHunt79 for providing their solutions on github which I used to build my own solution.</p>
 <ul>
